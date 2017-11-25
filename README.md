@@ -14,7 +14,7 @@ $ gcc sistema_solar.c -o sistema_solar -lm -lglut -lGL -lGLU && ./sistema_solar
 ou use os comandos
 
 ```
-make
+$ make
 $ ./sistema_solar
 ```
 
