@@ -2,13 +2,17 @@
 Repositório destinado aos arquivos do projeto final da disciplina de Computação Gráfica - DCA/UFRN
 
 # Para Compilar
-`gcc sistema_solar.c -o sistema_solar -lm -lglut -lGL -lGLU && ./sistema_solar`
+```
+gcc sistema_solar.c -o sistema_solar -lm -lglut -lGL -lGLU && ./sistema_solar
+```
 
 ou use os comandos
 
-`make` 
+```
+make
+./sistema_solar
+```
 
-`./sistema_solar`
 
 ## Discentes:
 * Daniel Morais
