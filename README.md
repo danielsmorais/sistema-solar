@@ -6,9 +6,9 @@ Repositório destinado aos arquivos do projeto final da disciplina de Computaç�
 
 ou use os comandos
 
-`make 
+`make` 
 
-./sistema_solar`
+`./sistema_solar`
 
 ## Discentes:
 * Daniel Morais
