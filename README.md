@@ -7,6 +7,7 @@ Repositório destinado aos arquivos do projeto final da disciplina de Computaç�
 ou use os comandos
 
 `make 
+
 ./sistema_solar`
 
 ## Discentes:
