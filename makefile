@@ -1,17 +1,22 @@
 CC = gcc
-CFLAGS = -lGL -lglut -lGLU -lm
+CFLAGS =
+LDFLAGS = -lGL -lglut -lGLU -lm
 
-EXAMPLES = sistema_solar.c
-	   
+FILES = texture.o sistema_solar.o
 
-OUTPUTS = $(basename $(EXAMPLES))
+all: sistema_solar
 
-.PHONY: clean
+sistema_solar: ${FILES}
+	$(CC) $(CFLAGS) ${FILES} $(LDFLAGS) -o $@
 
-all: $(OUTPUTS)
+sistema_solar.o: sistema_solar.c
 
-%: %.c
-	$(CC) $< -o $@ $(CFLAGS)
+texture.o: texture.h texture.c
+
+.PHONY: clean realclean
 
 clean:
-	-rm -f $(OUTPUTS) 
+	-rm -f *.o *~ 
+
+realclean: clean
+	-rm -f main
