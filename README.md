@@ -19,3 +19,7 @@ $ make
 $ ./sistema_solar
 ```
 
+## Demostração
+
+![Sistema Solar](https://github.com/danielsmorais/sistema-solar/blob/master/media/espaco.png)
+
