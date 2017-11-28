@@ -170,19 +170,19 @@ void display(void)
 	
     planeta(anoA,dia,luna,0.2,2,textura[1],false); //mercurio
 	drawHollowCircle(0,0,2);
-    planeta(anoB,dia,luna,0.3,3,textura[2],false); //venus
+    planeta(anoA*0.9,dia,luna,0.3,3,textura[2],false); //venus
 	drawHollowCircle(0,0,3);
-    planeta(anoC,dia,luna,0.2,3.5,textura[3],true); //terra
+    planeta(anoA*0.8,dia,luna,0.2,3.5,textura[3],true); //terra
 	drawHollowCircle(0,0,3.5);
-	planeta(anoA,dia,luna,0.2,4,textura[4],false); //marte
+	planeta(anoA*0.7,dia,luna,0.2,4,textura[4],false); //marte
 	drawHollowCircle(0,0,4);
-    planeta(anoB,dia,luna,0.2,5,textura[5],false); //jupiter
+    planeta(anoA*0.6,dia,luna,0.2,5,textura[5],false); //jupiter
 	drawHollowCircle(0,0,5);
-    planeta(anoC,dia,luna,0.2,6,textura[6],false); //saturno
+    planeta(anoA*0.5,dia,luna,0.2,6,textura[6],false); //saturno
 	drawHollowCircle(0,0,6);
-	planeta(anoA,dia,luna,0.2,7,textura[7],false); //urano
+	planeta(anoA*0.4,dia,luna,0.2,7,textura[7],false); //urano
 	drawHollowCircle(0,0,7);
-    planeta(anoB,dia,luna,0.2,8,textura[8],false); //netuno
+    planeta(anoA*0.3,dia,luna,0.2,8,textura[8],false); //netuno
 	drawHollowCircle(0,0,8);
 
 	espaco();
@@ -209,8 +209,8 @@ void idle(void)
     anoA-=1; 
     anoB-=0.5;
     anoC-=0.25;
-    dia-=0.25;
-    luna-=1;
+    dia-=8;
+    luna-=5;
     glutPostRedisplay();
 }
 
