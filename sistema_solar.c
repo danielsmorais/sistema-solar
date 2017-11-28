@@ -12,7 +12,7 @@
 #define false 0
 typedef int bool;
 
-static int year = 0, day_moon = 0;
+static double year = 0.0, day_moon = 0.0;
 static int day_mercurio = 0, day_venus = 0, day_earth = 0, day_mars = 0, day_jupter = 0, day_saturn = 0;
 static int day_urain = 0, day_neturn = 0;
 static double zoom = 0, lookSide = 0, moveSide = 0, moveUpDown = 0;
@@ -35,7 +35,6 @@ void init(void)
 
 	// Definir quantas texturas serão usadas no programa
 	glGenTextures (10, textura);  // 1 = uma textura;
-					// texture_id = vetor que guarda os números das texturas(para ir trocando depois)
 	glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
 
 	glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_NEAREST);
@@ -70,8 +69,7 @@ void init(void)
 
 void drawHollowCircle(GLfloat x, GLfloat y, GLfloat radius){
 	int i;
-	int lineAmount = 100; //# of triangles used to draw circle	
-	//GLfloat radius = 0.8f; //radius
+	int lineAmount = 100; 
 	GLfloat twicePi = 2.0f * PI;
 	glLineWidth(1.0f);
 	glPushMatrix();
@@ -87,7 +85,7 @@ void drawHollowCircle(GLfloat x, GLfloat y, GLfloat radius){
 	glPopMatrix();
 }
 
- void planeta(float ano, float dia, float lua, float raio, float distancia, GLuint text,bool truelua)
+ void planeta(float ano, float dia, float lua, float raio, float distancia, GLuint text,bool truelua, bool anel)
  {
 
 	GLUquadric *qobj = gluNewQuadric();
@@ -116,6 +114,23 @@ void drawHollowCircle(GLfloat x, GLfloat y, GLfloat radius){
 			glTranslatef (0.3, 0.0, 0.0);               //Distancia da lua em relação ao planeta
 			gluSphere(qobj,0.1, 30, 30);				// desenha a lua /// modificar
 			glDisable(GL_TEXTURE_2D);
+		}
+		if (anel)
+		{
+			glPushMatrix();
+			glRotatef (45, 1.0, 0.0, 0.0); 
+
+			drawHollowCircle(0,0,raio+0.1);
+			drawHollowCircle(0,0,raio+0.12);
+			drawHollowCircle(0,0,raio+0.13);
+			drawHollowCircle(0,0,raio+0.14);
+			drawHollowCircle(0,0,raio+0.15);
+			drawHollowCircle(0,0,raio+0.16);
+			drawHollowCircle(0,0,raio+0.17);
+			drawHollowCircle(0,0,raio+0.18);
+			drawHollowCircle(0,0,raio+0.19);
+			glPopMatrix();
+
 		}
 
 		gluDeleteQuadric(qobj);
@@ -168,21 +183,21 @@ void display(void)
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
 	
-    planeta(anoA,dia,luna,0.2,2,textura[1],false); //mercurio
+    planeta(anoA,dia,luna,0.2,2,textura[1],false,false); //mercurio
 	drawHollowCircle(0,0,2);
-    planeta(anoA*0.9,dia,luna,0.3,3,textura[2],false); //venus
+    planeta(anoA*0.9,dia,luna,0.2,3,textura[2],false,false); //venus
 	drawHollowCircle(0,0,3);
-    planeta(anoA*0.8,dia,luna,0.2,3.5,textura[3],true); //terra
+    planeta(anoA*0.8,dia,luna,0.2,3.5,textura[3],true,false); //terra
 	drawHollowCircle(0,0,3.5);
-	planeta(anoA*0.7,dia,luna,0.2,4,textura[4],false); //marte
+	planeta(anoA*0.7,dia,luna,0.17,4,textura[4],false,false); //marte
 	drawHollowCircle(0,0,4);
-    planeta(anoA*0.6,dia,luna,0.2,5,textura[5],false); //jupiter
+    planeta(anoA*0.6,dia,luna,0.4,5,textura[5],false,false); //jupiter
 	drawHollowCircle(0,0,5);
-    planeta(anoA*0.5,dia,luna,0.2,6,textura[6],false); //saturno
+    planeta(anoA*0.5,dia,luna,0.5,6,textura[6],false, true); //saturno
 	drawHollowCircle(0,0,6);
-	planeta(anoA*0.4,dia,luna,0.2,7,textura[7],false); //urano
+	planeta(anoA*0.4,dia,luna,0.2,7,textura[7],false,false); //urano
 	drawHollowCircle(0,0,7);
-    planeta(anoA*0.3,dia,luna,0.2,8,textura[8],false); //netuno
+    planeta(anoA*0.3,dia,luna,0.2,8,textura[8],false,false); //netuno
 	drawHollowCircle(0,0,8);
 
 	espaco();
@@ -199,13 +214,14 @@ void reshape (int w, int h)
    gluPerspective(60.0, (GLfloat) w/(GLfloat) h, 1.0, 40.0);
    glMatrixMode(GL_MODELVIEW);
    glLoadIdentity();
-   gluLookAt (lookSide+7.0, zoom+3, 0.01, moveSide, moveUpDown, 0.0, 0.0, 1.0, 0.0);
+   gluLookAt (lookSide+7.0, zoom+4, 0.01, moveSide, moveUpDown, 0.0, 0.0, 1.0, 0.0);
    glHint( GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST );		//melhora a qualidade dos gráficos
    glutPostRedisplay();
 }
 
 void idle(void)
 {
+	year -=0.1;
     anoA-=1; 
     anoB-=0.5;
     anoC-=0.25;
@@ -277,17 +293,6 @@ void keyboard (unsigned char key, int x, int y)
 			luna-=4; 			//Permite que as luas girem em torno de seus planetas
             glutPostRedisplay();
             break;
-
-/////////////////////////////////////////////////
-
-		case 'z':
-			year = (year+5) % 360;
-			glutPostRedisplay();
-			break;
-		case 'Z':
-			year = (year - 5) % 360;
-			glutPostRedisplay();
-			break;
 		default:
 			break;
    }
