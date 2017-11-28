@@ -17,7 +17,7 @@ static int day_mercurio = 0, day_venus = 0, day_earth = 0, day_mars = 0, day_jup
 static int day_urain = 0, day_neturn = 0;
 static double zoom = 0, lookSide = 0, moveSide = 0, moveUpDown = 0;
 
-GLuint textura[10];
+GLuint textura[11];
 float anoA = 0,anoB = 0, anoC = 0, dia = 0, luna=0;
 int angulo_z = 0;
 
@@ -29,6 +29,7 @@ void init(void)
 	// Habilitar o uso de texturas
 	glEnable ( GL_TEXTURE_2D );
 	glEnable(GL_COLOR_MATERIAL);
+
 	// Definir a forma de armazenamento dos pixels na textura (1= alinhamento por byte)
 	glPixelStorei ( GL_UNPACK_ALIGNMENT, 1 );
 
@@ -52,6 +53,7 @@ void init(void)
 	textura[7] = LoadBitmap("media/Urano/Urano.bmp");
 	textura[8] = LoadBitmap("media/Neptuno/Neptuno.bmp");
 	textura[9] = LoadBitmap("media/Tierra/Luna.bmp");
+	textura[10] = LoadBitmap("media/estrellas_03.bmp");
 
 
 	//Habilita o uso de iluminação
@@ -122,6 +124,13 @@ void drawHollowCircle(GLfloat x, GLfloat y, GLfloat radius){
  }
 
 
+ void espaco(void)
+ {
+
+
+ }
+
+
 void display(void)
 {    
 	glMatrixMode(GL_MODELVIEW);
@@ -165,6 +174,19 @@ void display(void)
 	drawHollowCircle(0,0,7);
     planeta(anoB,dia,luna,0.2,8,textura[8],false); //netuno
 	drawHollowCircle(0,0,8);
+
+	glPushMatrix();
+	//desenha espaço com estrelas
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D,textura[10]);
+	
+	GLUquadric *qobj2 = gluNewQuadric();
+	gluQuadricDrawStyle(qobj2, GLU_FILL);
+	gluQuadricTexture(qobj2,GL_TRUE);
+	gluQuadricNormals(qobj2, GLU_SMOOTH);
+	gluSphere(qobj2,30, 30, 30);
+	glDisable(GL_TEXTURE_2D);
+	glPopMatrix();
 
     glutSwapBuffers();
 
