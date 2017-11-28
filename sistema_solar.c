@@ -6,6 +6,10 @@
 #include <stdlib.h>
 #include "texture.h"
 
+# define PI	3.14159265358979323846
+
+
+
 static int year = 0, day_moon = 0;
 static int day_mercurio = 0, day_venus = 0, day_earth = 0, day_mars = 0, day_jupter = 0, day_saturn = 0;
 static int day_urain = 0, day_neturn = 0;
@@ -55,6 +59,25 @@ void init(void)
 
    glClearColor (0.0, 0.0, 0.0, 0.0);
    glShadeModel (GL_FLAT);
+}
+
+void drawHollowCircle(GLfloat x, GLfloat y, GLfloat radius){
+	int i;
+	int lineAmount = 100; //# of triangles used to draw circle	
+	//GLfloat radius = 0.8f; //radius
+	GLfloat twicePi = 2.0f * PI;
+	glLineWidth(1.0f);
+	glPushMatrix();
+	glRotatef((GLfloat) 90.0, 1.0, 0.0, 0.0);
+	glBegin(GL_LINE_LOOP);
+		for(i = 0; i <= lineAmount;i++) { 
+			glVertex2f(
+			    x + (radius * cos(i *  twicePi / lineAmount)), 
+			    y + (radius* sin(i * twicePi / lineAmount))
+			);
+		}
+	glEnd();
+	glPopMatrix();
 }
 
  void planeta(float ano, float dia, float lua, float tamanho, float distancia, GLuint text)
@@ -120,15 +143,21 @@ void display(void)
 	glDisable(GL_TEXTURE_2D);
 	
     planeta(anoA,dia,luna,0.2,2,textura[1]); //mercurio
+	drawHollowCircle(0,0,2);
     planeta(anoB,dia,luna,0.3,3,textura[2]); //venus
+	drawHollowCircle(0,0,3);
     planeta(anoC,dia,luna,0.2,3.5,textura[3]); //terra
-
+	drawHollowCircle(0,0,3.5);
 	planeta(anoA,dia,luna,0.2,4,textura[4]); //marte
+	drawHollowCircle(0,0,4);
     planeta(anoB,dia,luna,0.2,5,textura[5]); //jupiter
+	drawHollowCircle(0,0,5);
     planeta(anoC,dia,luna,0.2,6,textura[6]); //saturno
-
+	drawHollowCircle(0,0,6);
 	planeta(anoA,dia,luna,0.2,7,textura[7]); //urano
+	drawHollowCircle(0,0,7);
     planeta(anoB,dia,luna,0.2,8,textura[8]); //netuno
+	drawHollowCircle(0,0,8);
 
     glutSwapBuffers();
 
@@ -142,8 +171,9 @@ void reshape (int w, int h)
    gluPerspective(60.0, (GLfloat) w/(GLfloat) h, 1.0, 40.0);
    glMatrixMode(GL_MODELVIEW);
    glLoadIdentity();
-   gluLookAt (0.0, 0.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+   gluLookAt (7.0, 7.0, 0.01, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 }
+
 
 void keyboard (unsigned char key, int x, int y)
 {
@@ -263,7 +293,7 @@ void keyboard (unsigned char key, int x, int y)
 int main(int argc, char** argv)
 {
    glutInit(&argc, argv);
-   glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+   glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH); //GLUT_DEPTH: buffer para evitar transparencia(por profundidade)
    glutInitWindowSize (1000, 500); 
    glutInitWindowPosition (100, 100);
    glutCreateWindow (argv[0]);
