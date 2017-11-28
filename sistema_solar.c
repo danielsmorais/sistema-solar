@@ -1,6 +1,7 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glut.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "texture.h"
@@ -10,16 +11,13 @@ static int day_mercurio = 0, day_venus = 0, day_earth = 0, day_mars = 0, day_jup
 static int day_urain = 0, day_neturn = 0;
 
 GLuint textura[10];
-	int anoA = 0,anoB = 0, anoC = 0, dia = 0, luna=0;
+int anoA = 0,anoB = 0, anoC = 0, dia = 0, luna=0;
 int angulo_z = 0;
-float azul[3]={0.0,0.0,1.0};
-float verde[3]={0.0,1.0,0.0};
-float rojo[3]={1.0,0.0,0.0};
+
 
 void init(void) 
 {
 	//Obs: o uso de textura consiste apenas em dois passos: Carga e Aplicação.
-
 	// Habilitar o uso de texturas
 	glEnable ( GL_TEXTURE_2D );
 	glEnable(GL_COLOR_MATERIAL);
@@ -31,7 +29,7 @@ void init(void)
 					// texture_id = vetor que guarda os números das texturas(para ir trocando depois)
 	glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE );
 
-	glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_NEAREST );
+	glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_NEAREST);
 	glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
 	glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
@@ -52,7 +50,6 @@ void init(void)
 	// Habilita a luz de número 0
 	glEnable(GL_LIGHT0);
 
-
 	//negocio para nao ficar mais transparente
 	glEnable(GL_DEPTH_TEST);
 
@@ -64,7 +61,8 @@ void init(void)
  {
 
 	GLUquadric *qobj = gluNewQuadric();
-
+	gluQuadricOrientation(qobj, GLU_OUTSIDE);	
+	gluQuadricDrawStyle(qobj, GLU_FILL);
 	gluQuadricTexture(qobj,GL_TRUE);
 	gluQuadricNormals(qobj, GLU_SMOOTH);
  
@@ -83,8 +81,12 @@ void init(void)
         glRotatef ((GLfloat) lua, 0.0, 1.0, 0.0);   	//angulo da lua de acordo coma hora
         glTranslatef (0.3, 0.0, 0.0);                	//Distancia da lua em relação ao planeta
         glColor3f (0.7, 0.7, 0.7);                   	//Cor da lua /// modificar para textura
-        glutWireSphere(0.07, 10, 8);                 	// desenha a lua /// modificar
+        //glutWireSphere(0.07, 10, 8);                 	// desenha a lua /// modificar
+		
+		gluDeleteQuadric(qobj);
+
     glPopMatrix();
+
 
 	glDisable(GL_TEXTURE_2D);
  }
@@ -92,13 +94,13 @@ void init(void)
 
 void display(void)
 {    
-
 	glMatrixMode(GL_MODELVIEW);
 	
    	glClear (GL_COLOR_BUFFER_BIT);
    	glColor3f (1.0, 1.0, 1.0);
 
 	GLUquadric *qobj = gluNewQuadric();
+	gluQuadricDrawStyle(qobj, GLU_FILL);
 	gluQuadricTexture(qobj,GL_TRUE);
 	gluQuadricNormals(qobj, GLU_SMOOTH);
 
@@ -112,13 +114,14 @@ void display(void)
 	glPushMatrix();
 	glRotated(90, 0, 1, 0);
 	glRotatef((GLfloat)year, 0.0, 1.0, 0.0);    
-    gluSphere(qobj,0.7, 30, 30);
+    gluSphere(qobj,1, 30, 30);
+	gluDeleteQuadric(qobj);
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
 	
-    planeta(anoA,dia,luna,0.1,1,textura[1]); //mercurio
-    planeta(anoB,dia,luna,0.2,2,textura[2]); //venus
-    planeta(anoC,dia,luna,0.2,3,textura[3]); //terra
+    planeta(anoA,dia,luna,0.2,2,textura[1]); //mercurio
+    planeta(anoB,dia,luna,0.3,3,textura[2]); //venus
+    planeta(anoC,dia,luna,0.2,3.5,textura[3]); //terra
 
 	planeta(anoA,dia,luna,0.2,4,textura[4]); //marte
     planeta(anoB,dia,luna,0.2,5,textura[5]); //jupiter
@@ -136,7 +139,7 @@ void reshape (int w, int h)
    glViewport (0, 0, (GLsizei) w, (GLsizei) h); 
    glMatrixMode (GL_PROJECTION);
    glLoadIdentity ();
-   gluPerspective(60.0, (GLfloat) w/(GLfloat) h, 1.0, 20.0);
+   gluPerspective(60.0, (GLfloat) w/(GLfloat) h, 1.0, 40.0);
    glMatrixMode(GL_MODELVIEW);
    glLoadIdentity();
    gluLookAt (0.0, 0.0, 5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
@@ -260,7 +263,7 @@ void keyboard (unsigned char key, int x, int y)
 int main(int argc, char** argv)
 {
    glutInit(&argc, argv);
-   glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGB);
+   glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
    glutInitWindowSize (1000, 500); 
    glutInitWindowPosition (100, 100);
    glutCreateWindow (argv[0]);
