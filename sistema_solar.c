@@ -1,3 +1,7 @@
+/* COMPUTAÇÃO GRÁFICA - ENGENHARIA DE COMPUTAÇÃO - 2017.2
+DISCENTES: DANIEL MORAIS, RIAN MARTINS E NATAN LIMA
+PROFESSOR: LUIZ MARCOS */
+
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glut.h>
@@ -20,7 +24,6 @@ static double zoom = 0, lookSide = 0, moveSide = 0, moveUpDown = 0;
 GLuint textura[11];
 float anoA = 0,anoB = 0, anoC = 0, dia = 0, luna=0;
 int angulo_z = 0;
-
 
 
 void init(void) 
@@ -87,7 +90,6 @@ void drawHollowCircle(GLfloat x, GLfloat y, GLfloat radius){
 
  void planeta(float ano, float dia, float lua, float raio, float distancia, GLuint text,bool truelua, bool anel)
  {
-
 	GLUquadric *qobj = gluNewQuadric();
 	gluQuadricOrientation(qobj, GLU_OUTSIDE);	
 	gluQuadricDrawStyle(qobj, GLU_FILL);
@@ -223,8 +225,6 @@ void idle(void)
 {
 	year -=0.1;
     anoA-=1; 
-    anoB-=0.5;
-    anoC-=0.25;
     dia-=8;
     luna-=5;
     glutPostRedisplay();
@@ -281,8 +281,6 @@ void keyboard (unsigned char key, int x, int y)
 
         case 'g':
 			anoA-=4; 			//Planetas transladarem em suas orbitas
-            anoB-=2;
-            anoC-=1;
             glutPostRedisplay();
             break;
         case 'h':
