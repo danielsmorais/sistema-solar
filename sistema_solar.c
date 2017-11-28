@@ -13,10 +13,12 @@
 static int year = 0, day_moon = 0;
 static int day_mercurio = 0, day_venus = 0, day_earth = 0, day_mars = 0, day_jupter = 0, day_saturn = 0;
 static int day_urain = 0, day_neturn = 0;
+static double zoom = 0, lookSide = 0, moveSide = 0, moveUpDown = 0;
 
 GLuint textura[10];
-int anoA = 0,anoB = 0, anoC = 0, dia = 0, luna=0;
+float anoA = 0,anoB = 0, anoC = 0, dia = 0, luna=0;
 int angulo_z = 0;
+
 
 
 void init(void) 
@@ -171,13 +173,66 @@ void reshape (int w, int h)
    gluPerspective(60.0, (GLfloat) w/(GLfloat) h, 1.0, 40.0);
    glMatrixMode(GL_MODELVIEW);
    glLoadIdentity();
-   gluLookAt (7.0, 7.0, 0.01, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+   gluLookAt (lookSide, zoom, 5.0, moveSide, moveUpDown, 0.0, 0.0, 1.0, 0.0);
+   glutPostRedisplay();
+}
+
+void idle(void)
+{
+    anoA-=1; //Caso que hace avanzar los planetas sobre sus �rbitas.
+    anoB-=0.5;
+    anoC-=0.25;
+    dia-=0.25;
+    luna-=1;
+    glutPostRedisplay();
 }
 
 
 void keyboard (unsigned char key, int x, int y)
 {
    switch (key) {
+
+   		case 'p':
+   			if(moveUpDown > -1.9)
+   				moveUpDown -= 0.2;
+   			reshape(1000,500);
+   			break;
+   		case 'l':
+   			if(moveUpDown < 1.9)
+   				moveUpDown += 0.5;
+   			reshape(1000,500);
+   			break;
+   		case '[':
+   			if(moveSide > -10)
+   				moveSide -= 0.5;
+   			reshape(1000,500);
+   			break;
+   		case ']':
+   				moveSide += 0.5;
+   			reshape(1000,500);
+   			break;
+   		case '+':
+   			if(zoom > 0)
+   				zoom -= 0.5;
+   			reshape(1000,500);
+   			break;
+   		case '-':
+   			if(zoom < 20)
+   				zoom += 0.5;
+   			reshape(1000,500);
+   			break;
+   		case '.':
+   			if(lookSide < 15)
+   				lookSide += 1;
+   			reshape(1000,500);
+   			break;
+   		case ',':
+   			if(lookSide > -15)
+   				lookSide -= 1;
+   			reshape(1000,500);
+   			break;
+
+/////////////////////////////////////////////////
 
         case 'g':
 			anoA-=4; //Caso que hace avanzar los planetas sobre sus �rbitas.
@@ -196,87 +251,6 @@ void keyboard (unsigned char key, int x, int y)
 
 /////////////////////////////////////////////////
 
-
-		case 'q':
-			day_mercurio = (day_mercurio + 10) % 360;
-			glutPostRedisplay();
-			break;
-		case 'Q':
-			day_mercurio = (day_mercurio - 10) % 360;
-			glutPostRedisplay();
-			break;
-
-		case 'w':
-			day_venus = (day_venus + 10) % 360;
-			glutPostRedisplay();
-			break;
-		case 'W':
-			day_venus = (day_venus - 10) % 360;
-			glutPostRedisplay();
-			break;
-
-		case 'e':
-			day_earth = (day_earth + 10) % 360;
-			glutPostRedisplay();
-			break;
-		case 'E':
-			day_earth = (day_earth - 10) % 360;
-			glutPostRedisplay();
-			break;
-
-		case 'r':
-			day_mars = (day_mars + 10) % 360;
-			glutPostRedisplay();
-			break;
-		case 'R':
-			day_mars = (day_mars - 10) % 360;
-			glutPostRedisplay();
-			break;
-
-		case 't':
-			day_jupter = (day_jupter + 10) % 360;
-			glutPostRedisplay();
-			break;
-		case 'T':
-			day_jupter = (day_jupter - 10) % 360;
-			glutPostRedisplay();
-			break;
-
-		case 'y':
-			day_saturn = (day_saturn + 10) % 360;
-			glutPostRedisplay();
-			break;
-		case 'Y':
-			day_saturn = (day_saturn - 10) % 360;
-			glutPostRedisplay();
-			break;
-
-		case 'u':
-			day_urain = (day_urain + 10) % 360;
-			glutPostRedisplay();
-			break;
-		case 'U':
-			day_urain = (day_urain - 10) % 360;
-			glutPostRedisplay();
-			break;
-
-		case 'i':
-			day_neturn = (day_neturn + 10) % 360;
-			glutPostRedisplay();
-			break;
-		case 'I':
-			day_neturn = (day_neturn - 10) % 360;
-			glutPostRedisplay();
-			break;
-
-		case 'm':
-			day_moon = (day_moon + 15) % 360;
-			glutPostRedisplay();
-			break;
-		case 'M':
-			day_moon = (day_moon - 15) % 360;
-			glutPostRedisplay();
-			break;
 		case 'z':
 			year = (year+5) % 360;
 			glutPostRedisplay();
@@ -301,6 +275,7 @@ int main(int argc, char** argv)
    glutDisplayFunc(display); 
    glutReshapeFunc(reshape);
    glutKeyboardFunc(keyboard);
+   glutIdleFunc(idle);
    glutMainLoop();
    return 0;
 }
