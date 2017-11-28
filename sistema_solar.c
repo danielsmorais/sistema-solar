@@ -8,7 +8,9 @@
 
 # define PI	3.14159265358979323846
 
-
+#define true 1
+#define false 0
+typedef int bool;
 
 static int year = 0, day_moon = 0;
 static int day_mercurio = 0, day_venus = 0, day_earth = 0, day_mars = 0, day_jupter = 0, day_saturn = 0;
@@ -49,6 +51,7 @@ void init(void)
 	textura[6] = LoadBitmap("media/Saturno/Saturno.bmp");
 	textura[7] = LoadBitmap("media/Urano/Urano.bmp");
 	textura[8] = LoadBitmap("media/Neptuno/Neptuno.bmp");
+	textura[9] = LoadBitmap("media/Tierra/Luna.bmp");
 
 
 	//Habilita o uso de iluminação
@@ -82,7 +85,7 @@ void drawHollowCircle(GLfloat x, GLfloat y, GLfloat radius){
 	glPopMatrix();
 }
 
- void planeta(float ano, float dia, float lua, float tamanho, float distancia, GLuint text)
+ void planeta(float ano, float dia, float lua, float raio, float distancia, GLuint text,bool truelua)
  {
 
 	GLUquadric *qobj = gluNewQuadric();
@@ -100,20 +103,22 @@ void drawHollowCircle(GLfloat x, GLfloat y, GLfloat radius){
         glTranslatef (distancia, 0.0, 0.0);    			//Distancia entre o sol e o planeta
         glPushMatrix();
             glRotatef ((GLfloat) dia, 0.0, 1.0, 0.0);   //angulo do planeta de acorodo com o dia
-            gluSphere(qobj,tamanho, 30, 30);            /* desenha o planeta */
+            gluSphere(qobj,raio, 30, 30);            /* desenha o planeta */
+			glDisable(GL_TEXTURE_2D);
         glPopMatrix();
-        glRotatef (25, 0.0, 0.0, 0.0);               	//angulo da lua em relação ao planeta
-        glRotatef ((GLfloat) lua, 0.0, 1.0, 0.0);   	//angulo da lua de acordo coma hora
-        glTranslatef (0.3, 0.0, 0.0);                	//Distancia da lua em relação ao planeta
-        glColor3f (0.7, 0.7, 0.7);                   	//Cor da lua /// modificar para textura
-        //glutWireSphere(0.07, 10, 8);                 	// desenha a lua /// modificar
-		
+		if(truelua){
+			glEnable(GL_TEXTURE_2D);
+			glBindTexture(GL_TEXTURE_2D,textura[9]);
+			glRotatef (25, 0.0, 0.0, 0.0);              //angulo da lua em relação ao planeta
+			glRotatef ((GLfloat) lua, 0.0, 1.0, 0.0);   //angulo da lua de acordo coma hora
+			glTranslatef (0.3, 0.0, 0.0);               //Distancia da lua em relação ao planeta
+			gluSphere(qobj,0.1, 30, 30);				// desenha a lua /// modificar
+			glDisable(GL_TEXTURE_2D);
+		}
+
 		gluDeleteQuadric(qobj);
 
     glPopMatrix();
-
-
-	glDisable(GL_TEXTURE_2D);
  }
 
 
@@ -144,21 +149,21 @@ void display(void)
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
 	
-    planeta(anoA,dia,luna,0.2,2,textura[1]); //mercurio
+    planeta(anoA,dia,luna,0.2,2,textura[1],false); //mercurio
 	drawHollowCircle(0,0,2);
-    planeta(anoB,dia,luna,0.3,3,textura[2]); //venus
+    planeta(anoB,dia,luna,0.3,3,textura[2],false); //venus
 	drawHollowCircle(0,0,3);
-    planeta(anoC,dia,luna,0.2,3.5,textura[3]); //terra
+    planeta(anoC,dia,luna,0.2,3.5,textura[3],true); //terra
 	drawHollowCircle(0,0,3.5);
-	planeta(anoA,dia,luna,0.2,4,textura[4]); //marte
+	planeta(anoA,dia,luna,0.2,4,textura[4],false); //marte
 	drawHollowCircle(0,0,4);
-    planeta(anoB,dia,luna,0.2,5,textura[5]); //jupiter
+    planeta(anoB,dia,luna,0.2,5,textura[5],false); //jupiter
 	drawHollowCircle(0,0,5);
-    planeta(anoC,dia,luna,0.2,6,textura[6]); //saturno
+    planeta(anoC,dia,luna,0.2,6,textura[6],false); //saturno
 	drawHollowCircle(0,0,6);
-	planeta(anoA,dia,luna,0.2,7,textura[7]); //urano
+	planeta(anoA,dia,luna,0.2,7,textura[7],false); //urano
 	drawHollowCircle(0,0,7);
-    planeta(anoB,dia,luna,0.2,8,textura[8]); //netuno
+    planeta(anoB,dia,luna,0.2,8,textura[8],false); //netuno
 	drawHollowCircle(0,0,8);
 
     glutSwapBuffers();
@@ -173,13 +178,14 @@ void reshape (int w, int h)
    gluPerspective(60.0, (GLfloat) w/(GLfloat) h, 1.0, 40.0);
    glMatrixMode(GL_MODELVIEW);
    glLoadIdentity();
-   gluLookAt (lookSide, zoom, 5.0, moveSide, moveUpDown, 0.0, 0.0, 1.0, 0.0);
+   gluLookAt (lookSide+7.0, zoom+3, 0.01, moveSide, moveUpDown, 0.0, 0.0, 1.0, 0.0);
+   glHint( GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST );		//melhora a qualidade dos gráficos
    glutPostRedisplay();
 }
 
 void idle(void)
 {
-    anoA-=1; //Caso que hace avanzar los planetas sobre sus �rbitas.
+    anoA-=1; 
     anoB-=0.5;
     anoC-=0.25;
     dia-=0.25;
@@ -235,17 +241,17 @@ void keyboard (unsigned char key, int x, int y)
 /////////////////////////////////////////////////
 
         case 'g':
-			anoA-=4; //Caso que hace avanzar los planetas sobre sus �rbitas.
+			anoA-=4; 			//Planetas transladarem em suas orbitas
             anoB-=2;
             anoC-=1;
             glutPostRedisplay();
             break;
         case 'h':
-			dia--; //Caso que permite que los planetas giren sobre su propio eje
+			dia--; 				//Permite que os planetas girem sobre o próprio eixo
             glutPostRedisplay();
             break;
     	case 'j':
-			luna-=4; //Caso que permite que las lunas giren alrededor de sus planetas
+			luna-=4; 			//Permite que as luas girem em torno de seus planetas
             glutPostRedisplay();
             break;
 
