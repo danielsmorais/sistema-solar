@@ -126,8 +126,18 @@ void drawHollowCircle(GLfloat x, GLfloat y, GLfloat radius){
 
  void espaco(void)
  {
-
-
+	glPushMatrix();
+	//desenha espaço com estrelas
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D,textura[10]);
+	
+	GLUquadric *qobj = gluNewQuadric();
+	gluQuadricDrawStyle(qobj, GLU_FILL);
+	gluQuadricTexture(qobj,GL_TRUE);
+	gluQuadricNormals(qobj, GLU_SMOOTH);
+	gluSphere(qobj,30, 30, 30);
+	glDisable(GL_TEXTURE_2D);
+	glPopMatrix();
  }
 
 
@@ -175,19 +185,8 @@ void display(void)
     planeta(anoB,dia,luna,0.2,8,textura[8],false); //netuno
 	drawHollowCircle(0,0,8);
 
-	glPushMatrix();
-	//desenha espaço com estrelas
-	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D,textura[10]);
+	espaco();
 	
-	GLUquadric *qobj2 = gluNewQuadric();
-	gluQuadricDrawStyle(qobj2, GLU_FILL);
-	gluQuadricTexture(qobj2,GL_TRUE);
-	gluQuadricNormals(qobj2, GLU_SMOOTH);
-	gluSphere(qobj2,30, 30, 30);
-	glDisable(GL_TEXTURE_2D);
-	glPopMatrix();
-
     glutSwapBuffers();
 
 }
@@ -259,6 +258,8 @@ void keyboard (unsigned char key, int x, int y)
    				lookSide -= 1;
    			reshape(1000,500);
    			break;
+      case 27:
+         	exit(0);			   
 
 /////////////////////////////////////////////////
 
